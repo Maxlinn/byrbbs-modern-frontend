@@ -80,6 +80,9 @@ function insert_new_header() {
                 <a class="nhl_a" href="/elite/path" target="_blank" style="white-space: nowrap;">精华</a>
             </div>
             <div class="nhl_div">
+                <a class="nhl_a" href="/#!board/IWhisper" target="_blank" style="white-space: nowrap;">悄悄话</a>
+            </div>
+            <div class="nhl_div">
                 <input type="text" class="input-text" placeholder="搜索板块" id="b_search" x-webkit-speech="" lang="zh-CN">
             </div>
         </div>
