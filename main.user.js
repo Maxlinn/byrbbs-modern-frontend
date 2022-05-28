@@ -16,6 +16,11 @@
 
 var old_top_head = undefined;
 var old_left_aside = undefined;
+var fulltext_search_api = "http://123.207.168.11/byrbbs/?key=";
+var section_title2desc = {
+    "近期热门话题": "俗称的论坛十大<br>关注今天北邮的新鲜事",
+    "近期热点活动": "找点有趣的人，干点有趣的事"
+}
 
 function pick_top_head() {
     var el = $('header#top_head');
@@ -51,6 +56,9 @@ function insert_new_header() {
     var new_header = `
     <header style="text-align: center">
         <div id="nhr" style="float: right">
+            <div class="nhl_div">
+                <input type="text" class="input-text" placeholder="论坛全文搜索（非官方）" id="new_fulltext_search" x-webkit-speech="" lang="zh-CN">
+            </div>
             <div class="nhr_div">
                 <a class="nhr_a" href="/article/Announce/261" target="_blank" style="white-space: nowrap;">官方APP</a>
             </div>
@@ -83,7 +91,7 @@ function insert_new_header() {
                 <a class="nhl_a" href="/#!board/IWhisper" target="_blank" style="white-space: nowrap;">悄悄话</a>
             </div>
             <div class="nhl_div">
-                <input type="text" class="input-text" placeholder="搜索板块" id="b_search" x-webkit-speech="" lang="zh-CN">
+                <input type="text" class="input-text" placeholder="进入板块" id="b_search" x-webkit-speech="" lang="zh-CN">
             </div>
         </div>
     </header>
@@ -94,7 +102,7 @@ function insert_new_header() {
 
     // 编辑样式
     // 设置固定高度和阴影
-    $('header, div#nhr_sep').css({
+    $('header').css({
         'height': '80px',
         'box-shadow': '0px 1px 1px gray'
     });
@@ -124,6 +132,17 @@ function insert_new_header() {
     $('div#nhr').append(old_left_aside.find('div.u-login-id').css({
         'margin-top': '30px'
     }));
+
+    // 全文搜索的回车监听
+    $('input#new_fulltext_search').keypress(function (e) {
+        if (e.which == 13) {
+            var query = $('input#new_fulltext_search').val();
+            query = query.replace(' ', '+');
+            query = encodeURIComponent(query);
+            window.open(fulltext_search_api + query);
+            return false;
+        }
+    });
 }
 
 function remove_background_color() {
@@ -132,10 +151,62 @@ function remove_background_color() {
 
 function modify_containers() {
     // 字体重设
+    set_container_fonts();
+    levelup_picshow_and_topposts();
+    containers_squeeze_right();
+    // containers_squeeze_height();
+}
+
+function set_container_fonts() {
     $('section#main').css({
         'font-size': '1.4em',
         'font-family': 'Verdana, Tahoma, Arial, "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif'
     })
+}
+
+function levelup_picshow_and_topposts() {
+    var picshow = $('li#picshow').remove();
+    var topposts = $('li#topposts').remove();
+
+    // picshow and topposts
+    var pt = $('<ul id="new_pt">').append(picshow).append(topposts);
+    picshow.css({ "min-width": "500px" });
+    pt.css({ "display": "flex" });
+    $('ul#column1').prepend(pt);
+}
+
+function containers_squeeze_right() {
+    var lis = $('ul#column1>li');
+    for (var i = 0; i < lis.length; i++) {
+        // 注意要用jquery包一下
+        // content在li下面
+        var li = $(lis[i]);
+        // 关系：copound = | desc (desc_title\n desc_text) | content | 
+        var content = li.find("div.widget-content").remove();
+        var desc = $('<div class="new-widget-desc">');
+        var compound = $('<div class="new-widget-content">').append(desc).append(content);
+
+        var name = li.find("span.widget-title").text();
+        var text = section_title2desc[name];
+        var desc_title = $("<h3>" + name + "</h3>");
+        var desc_text = $("<p>" + text + "</p>");
+        desc.append(desc_title).append(`<hr>`).append(desc_text);
+
+        // 左侧的desc需要宽度
+        desc.css({ "min-width": "250px", "background-color": "#f7f7f7", "padding": "20px" });
+        // 内容的右栏顶满
+        content.css({ "width": "100%" });
+        // 整个控件横排
+        compound.css({ "display": "flex" });
+
+        li.append(compound);
+    }
+}
+
+function containers_squeeze_height() {
+    var lis = $('ul#column1>li.widget');
+    var contents = lis.find('div.widget-content');
+    contents.css({ "overflow-y": "scroll", "height": "160px" });
 }
 
 function main() {
@@ -143,9 +214,9 @@ function main() {
     remove_left_aside();
     remove_background_color();
 
+    insert_new_header();
     merge_columns();
     modify_containers();
-    insert_new_header();
 };
 
 // 只有当加载完毕后，jquery才能正确找到元素
