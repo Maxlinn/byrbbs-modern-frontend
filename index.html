@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- !!! Default title of your site -->
+  <title>北邮人论坛 - 变好看！ -- 北邮人论坛前端油猴增强脚本</title>
+  <!-- !!! Favicon, aka the icon of your site. Hereby is a svg of "gift" from icomoon.io. -->
+  <!-- <link rel="icon" href="favicon.svg"> -->
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'%3E%3Ctitle%3E%3C/title%3E%3Cg id='icomoon-ignore'%3E%3C/g%3E%3Cpath d='M385.758 160c9.063-6.44 17.756-13.608 25.722-21.574 16.701-16.701 27.873-37.25 31.456-57.861 3.929-22.593-1.836-43.57-15.815-57.55-11.15-11.149-26.255-17.043-43.682-17.043-24.816 0-50.961 11.912-71.73 32.681-33.238 33.238-52.613 79.119-63.038 111.861-7.72-32.901-23.103-77.322-53.009-107.229-16.047-16.046-36.557-24.285-55.923-24.285-15.827 0-30.89 5.502-42.13 16.743-24.993 24.994-21.616 68.893 7.543 98.052 10.396 10.396 22.549 19.031 35.36 26.206h-108.512v128h32v224h384v-224.001h32v-128h-94.242zM337.163 64.109c13.862-13.862 31.161-22.137 46.275-22.137 5.35 0 12.854 1.127 18.225 6.499 13.015 13.014 5.706 43.154-15.64 64.499-21.973 21.973-51.53 37.084-77.216 47.030h-25.336c9.284-28.774 26.029-68.228 53.692-95.891zM116.967 80.445c-0.351-4.56-0.025-13.124 6.098-19.247 5.122-5.122 11.894-6.198 16.674-6.198v0c10.629 0 21.734 5.008 30.466 13.74 16.936 16.936 30.883 43.886 40.334 77.938 0.255 0.92 0.504 1.835 0.748 2.743-0.908-0.243-1.823-0.492-2.743-0.748-34.052-9.452-61.001-23.399-77.937-40.335-7.914-7.913-12.885-18.080-13.64-27.893zM224 480h-128v-208h128v208zM224 256h-160v-64h160v64zM416 480h-128v-208h128v208zM448 256h-160v-64h160v64z'%3E%3C/path%3E%3C/svg%3E"
+    type="image/svg+xml" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+
+  <!-- Additional stylesheet, coordinate with dark mode plugin, remove if you like vanilla look -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/style.min.css" />
+</head>
+
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      // !!! Your site name on the top-left sidebar corner
+      name: '北邮人论坛前端油猴增强脚本',
+      // !!! Your site url of the top-right github icon
+      repo: 'https://github.com/Maxlinn/byrbbs-enhance-tmscript',
+      // OK, that's all, enjoy!
+      // Change followings if you what you are doing.
+
+      loadNavbar: false,
+      loadSidebar: false,
+      loadFooter: false, // for least files, create footer by https://github.com/erickjx/docsify-footer-enh
+      mergeNavbar: true, // navbar will be merged with the sidebar on smaller screens
+      subMaxLevel: 3, // sidebar item to show current page headings
+      sidebarDisplayLevel: 1, // nested sidebar collapse plugin
+      // notFoundPage: true, // _404.md will be display if url doesn't exist
+
+      darklightTheme: {
+        defaultTheme: 'light | dark',
+        // font of site and code blocks
+        // siteFont: '"Times New Roman","Noto Serif CJK SC","Songti SC","Microsoft YaHei UI",serif,-apple-system,BlinkMacSystemFont',
+        // codeFontFamily: 'Source Code Pro,Menlo,Consolas,Monaco,monospace,"Times New Roman","Noto Serif CJK SC","Songti SC","Microsoft YaHei UI",serif,-apple-system,BlinkMacSystemFont',
+      },
+
+      search: {
+        maxAge: 86400000, // ttl of index file in localstorage, one day on default
+        placeholder: '点击以搜索',
+        noData: '没有结果',
+        depth: 2
+      },
+
+      timeUpdater: {
+        text: '>上次更新于：{docsify-updated}', // Prompt of updated date message, will show on every page
+        formatUpdated: '{YYYY}/{MM}/{DD}',
+        whereToPlace: 'top' // can be 'bottom'
+      },
+
+      pagination: {
+        previousText: '上一页',
+        nextText: '下一页',
+        crossChapter: true,
+        crossChapterText: true,
+      },
+
+      footer: {
+        copy: '站点由 <a href="https://github.com/Maxlinn/">Maxlinn</a> 创建并维护，\
+        使用 <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> 协议来分发， \
+        转载时请注明与原文链接。',
+        auth: '站点使用了<a href="https://github.com/Maxlinn/linn-docsify-template">Maxlinn/linn-docsify-template</a> 模板来快速创建。',
+        pre: '<hr/>',
+        style: 'text-align: left;',
+        class: 'footer-class',
+      },
+
+      plugins: [
+        // handcraft highlight support
+        function (hook, vm) {
+          hook.beforeEach(function (html) {
+            let candidates = html.match(/==(.+?)==/g);
+            // without if, error occurs when there's no match
+            if (candidates) {
+              for (var i = 0; i < candidates.length; i++) {
+                html = html.replace(candidates[i],
+                  `<mark>` + candidates[i].replace(/==/g, "") + `</mark>`);
+              }
+            }
+            return html;
+          })
+        }
+      ]
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/external-script.min.js"></script>
+
+  <!-- Search, Copy Code, Image Zoom, Footer, Last Updated Date, Dark Mode, Prev/Next Page-->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@alertbox/docsify-footer/dist/docsify-footer.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-updated/src/time-updater.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
+  <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>
+
+  <!-- LaTeX, Code Highlight, Mermaid Graph -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="//unpkg.com/mermaid/dist/mermaid.js"></script>
+  <script src="//unpkg.com/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true });</script>
+
+  <!-- Add Space to Chinese and English overlap, remove if you don't like it much. -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-pangu/lib/pangu.min.js"></script>
+
+  <!-- Allow to collapse nested sidebar levels, corresponding to 'sidebarDisplayLevel' key in config -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
+
+  <!-- Allow tabs-like contents, format: html comments of "tabs:start" and "tabs:end" -->
+  <!-- See also: https://jhildenbiddle.github.io/docsify-tabs/#/?id=usage -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+
+  <!-- Other optional plugins -->
+  <!-- https://github.com/mrpotatoes/docsify-toc -->
+  <!-- https://github.com/HerbertHe/docsify-beian -->
+  <!-- https://github.com/markbattistella/docsify-sidebarFooter -->
+  <!-- https://github.com/waruqi/docsify-plugin-carbon, advertisments-->
+
+  <!-- Did not function properly -->
+  <!-- https://github.com/njleonzhang/docsify-edit-on-github -->
+  <!-- https://docsify.js.org/#/plugins?id=gitalk -->
+
+  <!-- Footer Plugin -->
+  <script src="//unpkg.com/docsify-footer-enh/dist/docsify-footer-enh.min.js"></script>
+</body>
+
+</html>
