@@ -224,9 +224,8 @@ function change_article_fonts() {
 }
 
 function fix_mobile_title() {
-    var els = document.getElementsByTagName('title');
-    if (els.length && els[0].text == "鍖楅偖浜鸿鍧") {
-        els[0].text = "北邮人论坛移动版";
+    if (document.title == "鍖楅偖浜鸿鍧") {
+        document.title = "北邮人论坛移动版";
     }
 }
 
