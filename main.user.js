@@ -10,7 +10,7 @@
 // @supportURL   https://github.com/Maxlinn/byrbbs-enhance-tmscript
 // @updateURL    https://raw.githubusercontent.com/Maxlinn/byrbbs-enhance-tmscript/master/main.user.js
 //
-// @require      https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js
+// @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @grant        none
 // ==/UserScript==
 
@@ -223,8 +223,16 @@ function change_article_fonts() {
     replys.css({ "font-family": "-apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif", "font-size": "15px" });
 }
 
+function fix_mobile_title() {
+    var els = document.getElementsByTagName('title');
+    if (els.length && els[0].text == "鍖楅偖浜鸿鍧") {
+        els[0].text = "北邮人论坛移动版";
+    }
+}
 
 function main() {
+    fix_mobile_title();
+
     pick_top_head();
     remove_left_aside();
     reset_background_color();
