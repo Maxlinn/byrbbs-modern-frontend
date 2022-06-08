@@ -1,6 +1,6 @@
 # README
 
-> - 此文档 [也发布于此页面](https://maxlinn.github.io/byrbbs-enhance-tmscript) ，您可以在浏览器中查看。
+> - 此文档[也发布于此页面](https://maxlinn.github.io/byrbbs-modern-frontend)，您可以在浏览器中查看。
 > - 也非常欢迎同学们一起维护，提交 Pull Request，不难的看看代码就会~~毕竟 JS 语法炒鸡简单~~。<br>改进空间请参阅 [6 已知问题和待完成的任务](#6%20已知问题和待完成的任务) 一节。<br>当然更希望在可见的未来北邮人团队能完全重构论坛前端。
 > - 目前能用油猴调整成这样已经不错了，尽量保留了原前端的特性。<br>想要有颠覆性的改进可能要读原前端的 Javascript 代码。
 
