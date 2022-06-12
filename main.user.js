@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         北邮人论坛 - 变好看！
 // @namespace    http://github.com/Maxlinn/
-// @version      1.2.0
+// @version      2.0.0
 // @description  一些仅在前端的北邮人论坛美化
 // @author       Maxlinn
 // @match        https://bbs.byr.cn/
 // @icon         https://bbs.byr.cn/favicon.ico
-// @homepageURL  https://github.com/Maxlinn/byrbbs-enhance-tmscript
-// @supportURL   https://github.com/Maxlinn/byrbbs-enhance-tmscript
-// @updateURL    https://raw.githubusercontent.com/Maxlinn/byrbbs-enhance-tmscript/master/main.user.js
+// @homepageURL  https://github.com/Maxlinn/byrbbs-modern-frontend
+// @supportURL   https://github.com/Maxlinn/byrbbs-modern-frontend
+// @updateURL    https://raw.githubusercontent.com/Maxlinn/byrbbs-modern-frontend/master/main.user.js
 //
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @grant        none
@@ -17,37 +17,46 @@
 var old_top_head = undefined;
 var old_left_aside = undefined;
 var fulltext_search_api = "http://123.207.168.11/byrbbs/?key=";
+var container_font_family = 'Verdana, Tahoma, Arial, "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif';
+var article_font_family = "-apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,     WenQuanYi Micro Hei,sans-serif";
 var section_title2desc = {
     "近期热门话题": "俗称的论坛十大<br>关注今天北邮的新鲜事",
-    "近期热点活动": "找点有趣的人，干点有趣的事"
-    // @todo
+    "近期热点活动": "找点有趣的人，干点有趣的事",
+    "生活时尚": "今天有什么奇思妙想",
+    "信息社会": "工作、读研、考公",
+    "投票": "你怎么看",
+    "精彩": "万一猜对了呢",
+    "近期推荐文章": "大家都在看什么"
 }
 
-function pick_top_head() {
+function save_old_header() {
     var el = $('header#top_head');
-    old_top_head = el.remove();
+    old_top_head = el;
 }
 
-function remove_left_aside() {
+function remove_left_bar() {
     var el = $('aside#menu').remove();
     old_left_aside = el;
     $('section#main').css({ 'margin-left': '120px', 'margin-right': '120px' });
 }
 
-function merge_columns() {
+function keep_only_first_column_of_containers() {
+    // 请将要用的控件都放到第一列来，第二列和第三列的控件不会被使用
     // 仅选择下一级，用`> li`来选择，或者使用`.children()`
 
-    var left_col = $('ul#column1');
-    var mid_col = $('ul#column2');
-    var right_col = $('ul#column3');
-    mid_col.remove().children('li').appendTo(left_col);
-    right_col.remove().children('li').appendTo(left_col);
+    // var left_col = $('ul#column1');
+    // var mid_col = $('ul#column2');
+    // var right_col = $('ul#column3');
+    // mid_col.remove().children('li').appendTo(left_col);
+    // right_col.remove().children('li').appendTo(left_col);
 
-    // 宽度全屏
+    $('ul#column2').remove();
+    $('ul#column3').remove();
     $('#columns .column').css('width', '100%');
 }
 
-function insert_new_header() {
+function replace_new_header() {
+    old_top_head.remove();
     // nh -> new_header, nhl -> new_header_left, nhr -> new_header_right
     // 先右再左，因为右是float
     var new_header = `
@@ -139,62 +148,60 @@ function insert_new_header() {
     });
 }
 
-function reset_background_color() {
+function set_background_color() {
     $('body:not(header)').css('background', '#F2F6F9');
 }
 
-function modify_containers() {
-    // 字体重设
-    set_container_fonts();
-    levelup_picshow_and_topposts();
-    containers_squeeze_right();
-    // containers_squeeze_height();
-}
-
-function set_container_fonts() {
+function containers_set_font() {
     $('section#main').css({
         'font-size': '1.4em',
-        'font-family': 'Verdana, Tahoma, Arial, "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif'
+        'font-family': container_font_family
     })
 }
 
-function levelup_picshow_and_topposts() {
+function raise_and_merge_picshow_and_topposts() {
     var picshow = $('li#picshow').remove();
     var topposts = $('li#topposts').remove();
 
-    // picshow and topposts
-    var pt = $('<ul id="new_pt">').append(picshow).append(topposts);
+    // picshow and topposts 合成一个ul
     picshow.css({ "min-width": "500px" });
-    pt.css({ "display": "flex" });
+
+    var pt = $('<ul id="new_pt">')
+        .append(picshow)
+        .append(topposts)
+        .css({ "display": "flex" });
     $('ul#column1').prepend(pt);
 }
 
-function containers_squeeze_right() {
+function containers_insert_desc() {
     var lis = $('ul#column1>li');
     for (var i = 0; i < lis.length; i++) {
-        // 注意要用jquery包一下
-        // content在li下面
+        // 注意要用jquery包一下，因为原生的dom对象不支持css方法
+        // li是一个container
         var li = $(lis[i]);
-        // 关系：copound = | desc (desc_title\n desc_text) | content | 
-        var content = li.find("div.widget-content").remove();
-        var desc = $('<div class="new-widget-desc">');
-        var compound = $('<div class="new-widget-content">').append(desc).append(content);
 
-        // 添加分区的标题和描述
+        // 分区的标题和描述
+        var desc = $('<div class="widget-desc">');
         var name = li.find("span.widget-title").text();
         var text = section_title2desc[name];
-        var desc_title = $("<h3>" + name + "</h3>");
-        var desc_text = $("<p>" + text + "</p>");
-        desc.append(desc_title).append(`<hr>`).append(desc_text);
+        desc
+            .append($("<h3>" + name + "</h3>"))
+            .append(`<hr>`)
+            .append($("<p>" + text + "</p>"))
+            // desc需要宽度
+            .css({
+                "min-width": "250px",
+                "background-color": "transparent",
+                "padding": "20px"
+            });
 
-        // 左侧的desc需要宽度
-        desc.css({ "min-width": "250px", "background-color": "transparent", "padding": "20px" });
-        // 内容的右栏顶满
-        content.css({ "width": "100%" });
-        // 整个控件横排
-        compound.css({ "display": "flex" });
+        // 分区内可能存在的列表，底部线拉长
+        li.find('ul').css({ "width": "100%" });
+        li.find('div.w-tab').css({ "width": "100%" });
 
-        li.append(compound);
+        li.find("div.widget-content")
+            .prepend(desc)
+            .css({ "width": "100%", "display": "flex" });
     }
 }
 
@@ -205,22 +212,27 @@ function containers_squeeze_height() {
     contents.css({ "overflow-y": "scroll", "height": "160px" });
 }
 
-// todo: 目前需要刷新才能生效
-function remove_article_reply_info() {
+function rewrite_reply_info() {
     var tb = $('table.article');
     if (!tb.length) return;
     var replys = tb.find('div.a-content-wrap');
-    var regex = /^发信人:.*?<br>标&nbsp;&nbsp;题:.*?<br>/ig;
+    // 删除发信人（因为左边avatar有，重复了）和标题
+    var del_sender_regex = /^发信人:.*?<br>标&nbsp;&nbsp;题:.*?<br>/ig;
     for (var i = 0; i < replys.length; i++) {
-        replys[i].innerHTML = replys[i].innerHTML.replace(regex, '');
+        replys[i].innerHTML = replys[i].innerHTML.replace(del_sender_regex, '');
+        // 在发信站下加横线，因为发信站后会有两个<br>，这里只替换第一处即可
+        replys[i].innerHTML = replys[i].innerHTML.replace(/<br><br>/, '<hr>');
     }
 }
 
-function change_article_fonts() {
+function replys_set_font() {
     var tb = $('table.article');
     if (!tb.length) return;
     var replys = tb.find('div.a-content-wrap');
-    replys.css({ "font-family": "-apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif", "font-size": "15px" });
+    replys.css({
+        "font-family": article_font_family,
+        "font-size": "15px"
+    });
 }
 
 function fix_mobile_title() {
@@ -229,20 +241,45 @@ function fix_mobile_title() {
     }
 }
 
-function main() {
+function homepage() {
+    /// 主页
+    // 内容容器的修改
+    keep_only_first_column_of_containers();
+    raise_and_merge_picshow_and_topposts();
+    containers_insert_desc();
+    containers_set_font();
+}
+
+function article() {
+    /// 帖子页
+    rewrite_reply_info();
+    replys_set_font();
+}
+
+function on_load() {
+    /// 移动版
     fix_mobile_title();
 
-    pick_top_head();
-    remove_left_aside();
-    reset_background_color();
+    /// 通用
+    // 左栏，背景
+    remove_left_bar();
+    set_background_color();
+    // 顶部
+    save_old_header();
+    replace_new_header();
 
-    insert_new_header();
-    merge_columns();
-    modify_containers();
-
-    remove_article_reply_info();
-    change_article_fonts();
+    homepage();
+    article();
 };
 
+function on_jump() {
+    homepage();
+    article();
+}
+
 // 只有当加载完毕后，jquery才能正确找到元素
-window.addEventListener('load', main, false);
+window.addEventListener('load', on_load, false);
+// 切换页面时，需要先等页面加载出来
+window.addEventListener('hashchange', () => {
+    new Promise(resolve => setTimeout(resolve, 400)).then(on_jump);
+}, false);
