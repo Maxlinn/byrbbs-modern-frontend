@@ -188,7 +188,7 @@ function containers_squeeze_right() {
         desc.append(desc_title).append(`<hr>`).append(desc_text);
 
         // 左侧的desc需要宽度
-        desc.css({ "min-width": "250px", "background-color": "#f7f7f7", "padding": "20px" });
+        desc.css({ "min-width": "250px", "background-color": "transparent", "padding": "20px" });
         // 内容的右栏顶满
         content.css({ "width": "100%" });
         // 整个控件横排
