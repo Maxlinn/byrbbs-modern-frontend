@@ -241,7 +241,7 @@ function fix_mobile_title() {
     }
 }
 
-function homepage() {
+function modify_homepage() {
     /// 主页
     // 内容容器的修改
     keep_only_first_column_of_containers();
@@ -250,12 +250,13 @@ function homepage() {
     containers_set_font();
 }
 
-function article() {
+function modify_article() {
     /// 帖子页
     rewrite_reply_info();
     replys_set_font();
 }
 
+// on_load只在初次加载页面时运行一次
 function on_load() {
     /// 移动版
     fix_mobile_title();
@@ -268,18 +269,22 @@ function on_load() {
     save_old_header();
     replace_new_header();
 
-    homepage();
-    article();
+    on_jump();
 };
 
+// on_jump在站内点击链接导致URL变化时运行
 function on_jump() {
-    homepage();
-    article();
+    var hash = window.location.hash;
+    if (hash == "") {
+        modify_homepage();
+    } else if (hash.startsWith("#!article")) {
+        modify_article();
+    }
 }
 
 // 只有当加载完毕后，jquery才能正确找到元素
 window.addEventListener('load', on_load, false);
 // 切换页面时，需要先等页面加载出来
 window.addEventListener('hashchange', () => {
-    new Promise(resolve => setTimeout(resolve, 400)).then(on_jump);
+    new Promise(resolve => setTimeout(resolve, 1000)).then(on_jump);
 }, false);
