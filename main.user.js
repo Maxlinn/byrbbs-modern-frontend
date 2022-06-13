@@ -9,8 +9,9 @@
 // @homepageURL  https://github.com/Maxlinn/byrbbs-modern-frontend
 // @supportURL   https://github.com/Maxlinn/byrbbs-modern-frontend
 // @updateURL    https://raw.githubusercontent.com/Maxlinn/byrbbs-modern-frontend/master/main.user.js
+// @downloadURL  https://raw.githubusercontent.com/Maxlinn/byrbbs-modern-frontend/master/main.user.js
 //
-// @require      https://code.jquery.com/jquery-3.6.0.min.js
+// @require      https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js
 // @grant        none
 // ==/UserScript==
 
@@ -30,13 +31,11 @@ var section_title2desc = {
 }
 
 function save_old_header() {
-    var el = $('header#top_head');
-    old_top_head = el;
+    old_top_head = $('header#top_head');
 }
 
-function remove_left_bar() {
-    var el = $('aside#menu').remove();
-    old_left_aside = el;
+function save_and_remove_left_bar() {
+    old_left_aside = $('aside#menu').remove();
     $('section#main').css({ 'margin-left': '120px', 'margin-right': '120px' });
 }
 
@@ -107,11 +106,11 @@ function replace_new_header() {
     $('body').prepend(new_header);
 
     // 编辑样式
-    // 设置标题栏的样式并冻结
+    // 设置标题栏的样式并始终在上面
     $('header').css({
         'height': '80px',
         'box-shadow': '0px 1px 1px gray',
-        'background-color': '#FFFFFF'
+        'background-color': '#FFFFFF',
     });
 
     // 设置字区域横排
@@ -152,7 +151,7 @@ function set_background_color() {
     $('body:not(header)').css('background', '#F2F6F9');
 }
 
-function containers_set_font() {
+function main_section_set_font() {
     $('section#main').css({
         'font-size': '1.4em',
         'font-family': container_font_family
@@ -241,19 +240,33 @@ function fix_mobile_title() {
     }
 }
 
+function fix_postrank_and_stayrank() {
+    $('li#stayrank,li#postrank')
+        .find("ul.w-list-line>li")
+        .find("span")
+        .css({ "width": "200px" });
+}
+
 function modify_homepage() {
     /// 主页
     // 内容容器的修改
     keep_only_first_column_of_containers();
+    // raise 需要放在insert_desc签名，因为picshow和topposts不需要描述
     raise_and_merge_picshow_and_topposts();
+    fix_postrank_and_stayrank();
     containers_insert_desc();
-    containers_set_font();
+    main_section_set_font();
 }
 
 function modify_article() {
     /// 帖子页
     rewrite_reply_info();
     replys_set_font();
+}
+
+function modify_board() {
+    /// 贴子列表页
+    main_section_set_font();
 }
 
 // on_load只在初次加载页面时运行一次
@@ -263,7 +276,7 @@ function on_load() {
 
     /// 通用
     // 左栏，背景
-    remove_left_bar();
+    save_and_remove_left_bar();
     set_background_color();
     // 顶部
     save_old_header();
@@ -279,6 +292,8 @@ function on_jump() {
         modify_homepage();
     } else if (hash.startsWith("#!article")) {
         modify_article();
+    } else if (hash.startsWith("#!board")) {
+        modify_board();
     }
 }
 
