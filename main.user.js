@@ -247,6 +247,29 @@ function fix_postrank_and_stayrank() {
         .css({ "width": "200px" });
 }
 
+function remove_too_long_ago_toppings() {
+    // 移除掉过于久远的置顶帖子（红色的），在悄悄话尤其常见
+    // 默认移除上一次更新超过一个月的回复
+    var trs = $('div.b-content').find('tr.top');
+    for (var i = 0; i < trs.length; i++) {
+        var tr = $(trs[i]);
+        // moment.js 无法导入到tampermoneky.js
+        var last_reply_timestr = tr.find('td.title_10')[1].outerText;
+        debugger;
+        console.log(last_reply_timestr);
+        var last_reply_time = new Date(Date.parse(last_reply_timestr.replace(/-/g, "/")));
+
+        console.log("last_reply_time: " + last_reply_time);
+        var now = new Date();
+        var diff = now - last_reply_time;
+        // diff month 
+        var diff_month = diff / (1000 * 60 * 60 * 24 * 30);
+        if (diff_month > 1) {
+            trs[i].remove(); // trs[i]才是dom元素，tr是jquery对象
+        }
+    }
+}
+
 function modify_homepage() {
     /// 主页
     // 内容容器的修改
@@ -267,6 +290,7 @@ function modify_article() {
 function modify_board() {
     /// 贴子列表页
     main_section_set_font();
+    remove_too_long_ago_toppings();
 }
 
 // on_load只在初次加载页面时运行一次

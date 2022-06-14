@@ -53,7 +53,8 @@ BYRBBS --> 浏览器
 ```
 
 ## 4 如何证明本脚本是可信的
-- 脚本中只从 `jsdelivr` 这一常见源导入了 `jquery` 这一常见库。
+- 脚本中只从 `jsdelivr` 这一常见源导入了 `jquery` 常见库。
+    - [`tampermonkey` 无法导入 `moment.js`(https://gitter.im/moment/moment?at=56df167d68c0777464837f44), 不要浪费时间在这个上了。
 - 脚本中不含有网络请求(GET/POST)等，只包含对于 HTML DOM 的操纵。
 - 脚本中没用使用任何油猴的高权限 API，也就是声明了 `@grant: none`.
 - 脚本是明文的，您可以进行审查: )
