@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         北邮人论坛 - 变好看！
 // @namespace    http://github.com/Maxlinn/
-// @version      1.2.0
+// @version      2.1.0
 // @description  一些仅在前端的北邮人论坛美化
 // @author       Maxlinn
 // @match        https://bbs.byr.cn/
@@ -32,6 +32,7 @@ var section_title2desc = {
     "投票": "你怎么看",
     "精彩": "万一猜对了呢",
     "近期推荐文章": "大家都在看什么"
+    // todo: not finished
 }
 
 function save_old_header() {
@@ -259,11 +260,8 @@ function remove_too_long_ago_toppings() {
         var tr = $(trs[i]);
         // moment.js 无法导入到tampermoneky.js
         var last_reply_timestr = tr.find('td.title_10')[1].outerText;
-        debugger;
-        console.log(last_reply_timestr);
         var last_reply_time = new Date(Date.parse(last_reply_timestr.replace(/-/g, "/")));
 
-        console.log("last_reply_time: " + last_reply_time);
         var now = new Date();
         var diff = now - last_reply_time;
         // diff month 
