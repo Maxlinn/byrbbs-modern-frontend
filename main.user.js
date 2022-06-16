@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         北邮人论坛 - 变好看！
 // @namespace    http://github.com/Maxlinn/
-// @version      2.2.1
+// @version      2.2.2
 // @description  一些仅在前端的北邮人论坛美化
 // @author       Maxlinn
 // @match        https://bbs.byr.cn/
@@ -171,7 +171,7 @@ function raise_and_merge_picshow_and_topposts() {
             <h3>此处应为 贴图秀</h3>
         <hr>
             <p>
-            <a href="https://bbs.byr.cn/#!widget/add?t=ext" target="_blank">点击此处</a>，将贴图秀栏目加入到第一列，再刷新<br>
+            <a href="https://bbs.byr.cn/#!widget/add?t=ext" target="_blank">点击此处，将贴图秀栏目加入到第一列，再刷新</a><br>
             小提示：打开脚本后，只有显示第一列的栏目，请将关心的栏目都放到第一列哦
             </p>
         </div></li>`);
@@ -184,7 +184,7 @@ function raise_and_merge_picshow_and_topposts() {
             <h3>此处应为 好文收录</h3>
         <hr>
             <p>
-            <a href="https://bbs.byr.cn/#!widget/add?t=ext"  target="_blank">点击此处</a>，将好文收录栏目加入到第一列，再刷新<br>
+            <a href="https://bbs.byr.cn/#!widget/add?t=ext"  target="_blank">点击此处，将好文收录栏目加入到第一列，再刷新</a><br>
             小提示：打开脚本后，只有显示第一列的栏目，请将关心的栏目都放到第一列哦
             </p>
         </div></li>`);
