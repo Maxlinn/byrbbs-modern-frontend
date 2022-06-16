@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         北邮人论坛 - 变好看！
 // @namespace    http://github.com/Maxlinn/
-// @version      2.2.2
+// @version      2.2.3
 // @description  一些仅在前端的北邮人论坛美化
 // @author       Maxlinn
 // @match        https://bbs.byr.cn/
@@ -165,6 +165,10 @@ function main_section_set_font() {
 
 function raise_and_merge_picshow_and_topposts() {
     var picshow = $('li#picshow').remove();
+    // 经反馈，有时不叫picshow，叫board-Picture
+    if (picshow.length == 0) {
+        picshow == $('li#board-Picture').remove();
+    }
     if (picshow.length == 0) {
         picshow = $(`<li><div>
         <hr>
