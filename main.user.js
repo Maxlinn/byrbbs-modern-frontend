@@ -15,6 +15,10 @@
 // @grant        none
 // ==/UserScript==
 
+// resolve jquery conflict with byrbbs's own jquery
+// https://stackoverflow.com/questions/28264871/require-jquery-to-a-safe-variable-in-tampermonkey-script-and-console
+this.$ = window.jQuery.noConflict(true);
+
 var old_top_head = undefined;
 var old_left_aside = undefined;
 var fulltext_search_api = "http://123.207.168.11/byrbbs/?key=";
@@ -74,7 +78,7 @@ function replace_new_header() {
                 <a class="nhr_a" href="http://weibo.com/byrbbs" target="_blank" style="white-space: nowrap;">官微</a>
             </div>
             <div class="nhr_div">
-                <a class="nhr_a" href="/n" target="_blank" style="white-space: nowrap;">移动版</a>
+                <a class="nhr_a" href="javascript:window.open('/n'+(window.location.hash.length? window.location.pathname: '')+window.location.hash.replace('#!', '')+window.location.search)" style="white-space: nowrap;">移动版</a>
             </div>
         </div>
         <div id="nhl">
