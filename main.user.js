@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         北邮人论坛 - 变好看！
 // @namespace    http://github.com/Maxlinn/
-// @version      2.1.0
+// @version      2.2.0
 // @description  一些仅在前端的北邮人论坛美化
 // @author       Maxlinn
 // @match        https://bbs.byr.cn/
@@ -165,7 +165,30 @@ function main_section_set_font() {
 
 function raise_and_merge_picshow_and_topposts() {
     var picshow = $('li#picshow').remove();
+    if (picshow.length == 0) {
+        picshow = $(`<li><div>
+        <hr>
+            <h3>此处应为 贴图秀</h3>
+        <hr>
+            <p>
+            <a href="https://bbs.byr.cn/#!widget/add?t=ext" target="_blank">点击此处</a>，将贴图秀栏目加入到第一列，再刷新<br>
+            小提示：打开脚本后，只有显示第一列的栏目，请将关心的栏目都放到第一列哦
+            </p>
+        </div></li>`);
+    }
+
     var topposts = $('li#topposts').remove();
+    if (topposts.length == 0) {
+        topposts = $(`<li><div>
+        <hr>
+            <h3>此处应为 好文收录</h3>
+        <hr>
+            <p>
+            <a href="https://bbs.byr.cn/#!widget/add?t=ext"  target="_blank">点击此处</a>，将好文收录栏目加入到第一列，再刷新<br>
+            小提示：打开脚本后，只有显示第一列的栏目，请将关心的栏目都放到第一列哦
+            </p>
+        </div></li>`);
+    }
 
     // picshow and topposts 合成一个ul
     picshow.css({ "min-width": "500px" });
@@ -187,7 +210,7 @@ function containers_insert_desc() {
         // 分区的标题和描述
         var desc = $('<div class="widget-desc">');
         var name = li.find("span.widget-title").text();
-        var text = section_title2desc[name];
+        var text = section_title2desc[name] || "#todo: 描述待添加"; // todo: 添加描述
         desc
             .append($("<h3>" + name + "</h3>"))
             .append(`<hr>`)
@@ -264,7 +287,7 @@ function remove_too_long_ago_toppings() {
 
         var now = new Date();
         var diff = now - last_reply_time;
-        // diff month 
+        // diff month
         var diff_month = diff / (1000 * 60 * 60 * 24 * 30);
         if (diff_month > 1) {
             trs[i].remove(); // trs[i]才是dom元素，tr是jquery对象
@@ -272,8 +295,20 @@ function remove_too_long_ago_toppings() {
     }
 }
 
+function add_nav_prompt() {
+    var prompt_to_insert = $(`
+    <p>
+        【美化】<a href="https://github.com/Maxlinn/byrbbs-modern-frontend" target="_blank">美化脚本</a>已启用，
+        <a href="https://bbs.byr.cn/#!widget/add" target="_blank">增减板块请点击此处并添加到第一列</a>。任何时候若效果不符合预期，请刷新。
+    </p>`).css({ "margin-top": "10px" });
+
+    $('div#notice_nav').append(prompt_to_insert);
+}
+
 function modify_homepage() {
     /// 主页
+    // 在近期公告里添加脚本的提示
+    add_nav_prompt();
     // 内容容器的修改
     keep_only_first_column_of_containers();
     // raise 需要放在insert_desc签名，因为picshow和topposts不需要描述
@@ -308,13 +343,14 @@ function on_load() {
     save_old_header();
     replace_new_header();
 
-    on_jump();
+    // 中间的页面元素是异步加载的，可能会慢一些，稍微等等
+    setTimeout(on_jump, 1000);
 };
 
 // on_jump在站内点击链接导致URL变化时运行
 function on_jump() {
     var hash = window.location.hash;
-    if (hash == "") {
+    if (hash == "" || hash == "#!default") {
         modify_homepage();
     } else if (hash.startsWith("#!article")) {
         modify_article();
@@ -325,7 +361,8 @@ function on_jump() {
 
 // 只有当加载完毕后，jquery才能正确找到元素
 window.addEventListener('load', on_load, false);
+
 // 切换页面时，需要先等页面加载出来
 window.addEventListener('hashchange', () => {
-    new Promise(resolve => setTimeout(resolve, 1000)).then(on_jump);
+    setTimeout(on_jump, 1000);
 }, false);
