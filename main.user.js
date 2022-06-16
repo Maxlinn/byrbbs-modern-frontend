@@ -221,7 +221,7 @@ function rewrite_reply_info() {
     if (!tb.length) return;
     var replys = tb.find('div.a-content-wrap');
     // 删除发信人（因为左边avatar有，重复了）和标题
-    var del_sender_regex = /^发信人:.*?<br>标&nbsp;&nbsp;题:.*?<br>/ig;
+    var del_sender_regex = /^发信人:.*?<br>标&nbsp;&nbsp;题[:：].*?<br>/ig;
     for (var i = 0; i < replys.length; i++) {
         replys[i].innerHTML = replys[i].innerHTML.replace(del_sender_regex, '');
         // 在发信站下加横线，因为发信站后会有两个<br>，这里只替换第一处即可
