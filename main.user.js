@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         北邮人论坛 - 变好看！
 // @namespace    http://github.com/Maxlinn/
-// @version      2.2.0
+// @version      2.2.1
 // @description  一些仅在前端的北邮人论坛美化
 // @author       Maxlinn
 // @match        https://bbs.byr.cn/
@@ -350,7 +350,7 @@ function on_load() {
 // on_jump在站内点击链接导致URL变化时运行
 function on_jump() {
     var hash = window.location.hash;
-    if (hash == "" || hash == "#!default") {
+    if (hash == "" || hash.startsWith("#!default")) {
         modify_homepage();
     } else if (hash.startsWith("#!article")) {
         modify_article();
