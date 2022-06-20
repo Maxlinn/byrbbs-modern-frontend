@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         北邮人论坛 - 变好看！
 // @namespace    http://github.com/Maxlinn/
-// @version      2.2.3
+// @version      2.3.1
 // @description  一些仅在前端的北邮人论坛美化
 // @author       Maxlinn
 // @match        https://bbs.byr.cn/
@@ -309,6 +309,15 @@ function add_nav_prompt() {
     $('div#notice_nav').append(prompt_to_insert);
 }
 
+function top_replys_width_expand() {
+    // “精彩回复 收起”那条线
+    $("div.a-nice-comment-divline").css({ "width": "100%" });
+    // “精彩评论” 的外框
+    $("div.a-nice-comment").css({ "width": "100%" });
+    // 各个评论
+    $("div.a-nice-comment-item").css({ "width": "95%" });
+}
+
 function modify_homepage() {
     /// 主页
     // 在近期公告里添加脚本的提示
@@ -326,6 +335,7 @@ function modify_article() {
     /// 帖子页
     rewrite_reply_info();
     replys_set_font();
+    top_replys_width_expand();
 }
 
 function modify_board() {
